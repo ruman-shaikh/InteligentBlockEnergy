@@ -1,0 +1,19 @@
+{"meters": 
+    [
+        {
+            "meter": "m01",
+            "temperature": "35",
+            "weather": "Sunny"
+        },
+        {
+            "meter": "m02",
+            "temperature": "33",
+            "weather": "Cloudy"
+        },
+        {
+            "meter": "n03",
+            "temperature": "30",
+            "weather": "Rainy"
+        }
+    ]
+}

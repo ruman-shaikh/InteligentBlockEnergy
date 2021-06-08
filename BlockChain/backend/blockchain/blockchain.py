@@ -3,6 +3,8 @@ from backend.wallet.transaction import Transaction
 from backend.wallet.wallet import Wallet
 from backend.config import MINING_REWARD_INPUT
 
+from backend.util.crypto_hash import crypto_hash
+
 class Blockchain:
     """
     Blockchain: a public ledger of transactions.
@@ -24,6 +26,7 @@ class Blockchain:
           - The incoming chain is formatted properly.
         """
         if len(chain) <= len(self.chain):
+            print(f"len(chain) {len(chain)} <= len(self.chain) {len(self.chain)}")
             raise Exception('Cannot replace. The incoming chain must be longer.')
 
         try:
@@ -66,6 +69,14 @@ class Blockchain:
         for i in range(1, len(chain)):
             block = chain[i]
             last_block = chain[i-1]
+            reconstructed_hash = crypto_hash(
+                block.timestamp,
+                block.last_hash,
+                block.data,
+                block.difficulty,
+                block.nonce
+            )
+            print(f"reconstructed_hash of block {reconstructed_hash}")
             Block.is_valid_block(last_block, block)
 
         Blockchain.is_valid_transaction_chain(chain)

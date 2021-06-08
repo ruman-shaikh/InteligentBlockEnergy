@@ -1,5 +1,7 @@
 import time
 import uuid
+import json
+from collections import OrderedDict
 
 from backend.wallet.wallet import Wallet
 from backend.config import MINING_REWARD, MINING_REWARD_INPUT
@@ -73,7 +75,8 @@ class Transaction:
         """
         Serialize the transaction.
         """
-        return self.__dict__
+        data = json.loads(json.dumps((OrderedDict(sorted(self.__dict__.items())))))
+        return data
 
     @staticmethod
     def from_json(transaction_json):

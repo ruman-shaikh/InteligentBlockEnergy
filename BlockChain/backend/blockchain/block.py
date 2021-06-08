@@ -1,4 +1,6 @@
 import time
+import json
+from collections import OrderedDict
 
 from backend.util.crypto_hash import crypto_hash
 from backend.util.hex_to_binary import hex_to_binary
@@ -44,7 +46,8 @@ class Block:
         """
         Serialize the block into a dictionary of its attributes
         """
-        return self.__dict__
+        data = json.loads(json.dumps((OrderedDict(sorted(self.__dict__.items())))))
+        return data
 
     @staticmethod
     def mine_block(last_block, data):
@@ -117,8 +120,8 @@ class Block:
             block.timestamp,
             block.last_hash,
             block.data,
-            block.nonce,
-            block.difficulty
+            block.difficulty,
+            block.nonce
         )
 
         if block.hash != reconstructed_hash:

@@ -1,0 +1,25 @@
+{"user": 
+    [
+        {
+            "name": "Ruman",
+            "userID": "rs112",
+            "password": "rpass",
+            "meter": "m01",
+            "address": "A112"
+        },
+        {
+            "name": "Sujay",
+            "userID": "sh113",
+            "password": "spass",
+            "meter": "m02",
+            "address": "A113"
+        },
+        {
+            "name": "Nikhil",
+            "userID": "nb114",
+            "password": "npass",
+            "meter": "n03",
+            "address": "A114"
+        }
+    ]
+}

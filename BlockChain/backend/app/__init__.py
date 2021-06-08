@@ -7,6 +7,8 @@ from flask_cors import CORS
 
 from backend.blockchain.blockchain import Blockchain
 from backend.wallet.wallet import Wallet
+from backend.account.account import Account
+from backend.account.etran import Etran
 from backend.wallet.transaction import Transaction
 from backend.wallet.transaction_pool import TransactionPool
 from backend.pubsub import PubSub
@@ -15,8 +17,9 @@ app = Flask(__name__)
 CORS(app, resources={ r'/*': { 'origins': 'http://localhost:3000' } })
 blockchain = Blockchain()
 wallet = Wallet(blockchain)
+account = Account(wallet)
 transaction_pool = TransactionPool()
-pubsub = PubSub(blockchain, transaction_pool)
+pubsub = PubSub(blockchain, transaction_pool, account)
 
 @app.route('/')
 def route_default():
@@ -75,6 +78,76 @@ def route_wallet_transact():
 def route_wallet_info():
     return jsonify({ 'address': wallet.address, 'balance': wallet.balance })
 
+@app.route('/account/login', methods=['POST'])
+def route_account_login():
+    credentials = request.get_json()
+    print("before checking for {credentials}")
+    if account.getAcc(credentials['username'], credentials['passsword']) == False:
+        return "Login Failed, invalid username/password"
+    #account.getAcc('rs112', 'rs112')
+    return "Login success"
+
+@app.route('/account/info')
+def route_account_info():
+    return f"Name {account.name}"
+
+@app.route('/account/request')#, methods=['POST'])
+def route_account_energy_request():
+    #request_data = request.get_json()
+    etran = account.requestEnergy(50)#request_data['quantity'])
+    if etran == False:
+        return f"Insuffecient funds- Balance: {wallet.balance}"
+    print("Broadcast energy")
+    pubsub.broadcast_energy(etran)
+    print("waiting")
+    while(not account.etranPoolAck):
+        pass
+    etran_ack = account.etranPoolAck[-1]
+    print('last etran found')
+    while etran.etuid != etran_ack.etuid and etran_ack.status != 0:
+        etran_ack = account.etranPoolAck[-1]
+    print(f'make transaction for {etran_ack.acceptorAddress}')
+    transact_url = 'http://localhost:' + str(PORT) + '/wallet/transact'
+    print(PORT)
+    requests.post(transact_url, json={ 'recipient': etran_ack.acceptorAddress, 'amount': etran.quantity })
+    mine_url = 'http://localhost:' + str(PORT) + '/blockchain/mine'
+    requests.get(mine_url)
+    print('made transaction')
+    etran.status = 1
+    pubsub.broadcast_energy(etran)
+    etran_ack.status = 1
+    pubsub.broadcast_energy_tran(etran_ack)
+
+    return "Reuquest successfull"
+
+@app.route('/account/esell')
+def route_account_energy_sell():
+    print('sell initiated')
+    while(not account.etranPool):
+        pass
+    etran = account.etranPool[-1]
+    while etran.status == 1:
+        etran = account.etranPool[-1]
+    print('last etran found')
+    if etran.status == -1:
+        etran.acceptRequest(account.wallet.address)
+        print(etran.acceptorAddress)
+        etran.status = 0
+        print('pre-broadcast ertan ack')
+        pubsub.broadcast_energy_tran(etran)
+        print('post-broadcast ertan ack')
+        return "Sell complete"
+
+    return "No energy transaction request found"
+
+@app.route('/account/tranpool')
+def route_account_tranpool():
+    return jsonify(list(account.etranPool))
+
+@app.route('/account/tranpoolack')
+def route_account_tranpoolack():
+    return jsonify(list(account.etranPool))
+
 @app.route('/known-addresses')
 def route_known_addresses():
     known_addresses = set()
@@ -94,7 +167,7 @@ PORT = ROOT_PORT
 
 if os.environ.get('PEER') == 'True':
     PORT = random.randint(5001, 6000)
-
+    
     result = requests.get(f'http://localhost:{ROOT_PORT}/blockchain')
     result_blockchain = Blockchain.from_json(result.json())
 
