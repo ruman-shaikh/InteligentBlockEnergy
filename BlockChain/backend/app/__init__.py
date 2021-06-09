@@ -82,21 +82,27 @@ def route_wallet_info():
 def route_account_login():
     credentials = request.get_json()
     print("before checking for {credentials}")
-    if account.getAcc(credentials['username'], credentials['passsword']) == False:
-        return "Login Failed, invalid username/password"
-    #account.getAcc('rs112', 'rs112')
-    return "Login success"
+    if account.getAcc(credentials['username'], credentials['password']) == False:
+        return jsonify({'status': False, 'text':'invalid username/password'})
+    return jsonify({'status': True, 'text':'success'})
 
 @app.route('/account/info')
 def route_account_info():
-    return f"Name {account.name}"
+    data = {
+        'name': account.name,
+        'userid': account.userID,
+        'address': account.address,
+        'meterid': account.meter.id,
+        'storage': account.meter.storage
+    }
+    return jsonify(data)
 
-@app.route('/account/request')#, methods=['POST'])
+@app.route('/account/request', methods=['POST'])
 def route_account_energy_request():
-    #request_data = request.get_json()
-    etran = account.requestEnergy(50)#request_data['quantity'])
+    request_data = request.get_json()
+    etran = account.requestEnergy(request_data['quantity'])
     if etran == False:
-        return f"Insuffecient funds- Balance: {wallet.balance}"
+        return jsonify({'status': False})
     print("Broadcast energy")
     pubsub.broadcast_energy(etran)
     print("waiting")
@@ -118,27 +124,34 @@ def route_account_energy_request():
     etran_ack.status = 1
     pubsub.broadcast_energy_tran(etran_ack)
 
-    return "Reuquest successfull"
+    return jsonify({'status': True})
 
-@app.route('/account/esell')
+@app.route('/account/esell', methods=['POST'])
 def route_account_energy_sell():
-    print('sell initiated')
-    while(not account.etranPool):
-        pass
-    etran = account.etranPool[-1]
-    while etran.status == 1:
-        etran = account.etranPool[-1]
-    print('last etran found')
-    if etran.status == -1:
-        etran.acceptRequest(account.wallet.address)
-        print(etran.acceptorAddress)
-        etran.status = 0
-        print('pre-broadcast ertan ack')
-        pubsub.broadcast_energy_tran(etran)
-        print('post-broadcast ertan ack')
-        return "Sell complete"
+    etuid = request.get_json()['etuid']
+    for i in account.etranPool:
+        if i.etuid == etuid:
+            print(f"etran {i.etuid} found")
+            etran = i
+            etran.acceptRequest(account.wallet.address)
+            print(etran.acceptorAddress)
+            etran.status = 0
+            print('pre-broadcast ertan ack')
+            pubsub.broadcast_energy_tran(etran)
+            print('post-broadcast ertan ack')
+            return jsonify({'status': True})
 
-    return "No energy transaction request found"
+    return jsonify({'status': False})
+
+@app.route('/account/etran')
+def route_account_etran():
+    if (not account.etranPool):
+        return jsonify({'status': False})
+    data = []
+    for i in account.etranPool:
+        if i.status == -1:
+            data.append(i.to_json())
+    return jsonify({'status': True, 'etran': data})
 
 @app.route('/account/tranpool')
 def route_account_tranpool():
