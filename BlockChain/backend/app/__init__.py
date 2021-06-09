@@ -151,6 +151,8 @@ def route_account_etran():
     for i in account.etranPool:
         if i.status == -1:
             data.append(i.to_json())
+    if (len(data) == 0):
+        return jsonify({'status': False})
     return jsonify({'status': True, 'etran': data})
 
 @app.route('/account/tranpool')
