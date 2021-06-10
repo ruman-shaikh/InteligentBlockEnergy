@@ -1,11 +1,18 @@
 body {
-  background-color: #444;
+   background-image: url("back1.jpg");
   color: #fff;
   text-align: center;
   font-size: 18px;
   font-family: 'Quicksand';
-  padding-top: 5%;
   word-wrap: break-word;
+}
+hr {
+  border: 0;
+  clear:both;
+  display:block;
+  width: 95%;               
+  background-color:red;
+  height: 3px;
 }
 
 .logo {
@@ -13,10 +20,51 @@ body {
   height: 250px;
 }
 
+.final_logo {
+  width: 300px;
+  height: 250px;
+}
+.Login{
+  background-color: black;
+   display: flex;
+  flex-direction: column;
+  align-items: center;
+  position:absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    height: 100%;
+    background-color: black;
+}
+.SellEnergy{
+   display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.Request{
+   display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.bbox{
+  display: flex;
+  flex-direction: column;
+   border-style: inset;
+  border-width: 7px;
+  border-color: coral;
+   padding: 3%;
+}
+.Dashboard{
+   display: flex;
+  flex-direction: column;
+  align-items: center;
+}
 .App {
   display: flex;
   flex-direction: column;
   align-items: center;
+
 }
 
 .WalletInfo {
@@ -38,11 +86,18 @@ body {
   margin-top: 5%;
 }
 
-a, a:hover {
-  color: #e66;
-  text-decoration: underline;
+a:link, a:visited {
+  background-color: #f44336;
+  color: white;
+  padding: 10px 10px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
 }
 
+a:hover, a:active {
+  background-color: black;
+}
 input, button {
   color: black;
 }

@@ -16,12 +16,11 @@ function Dashboard() {
 
   return (
     <div className="Dashboard">
-      <h2>Welcome to your dashboard</h2>
+      <h2><b>Welcome To Your Dashboard</b></h2>
       <hr/>
-      <br />
-      <h3>Your Account Info</h3>
       <br/>
-      <div className="AccountInfo">
+      <div className="bbox">
+      <h3><u><b>Your Account Info</b></u></h3>
         <div>Name: {name}</div>
         <div>UserID: {userid}</div>
         <div>Address: {address}</div>
@@ -32,11 +31,10 @@ function Dashboard() {
       <br />
       <Link to="/request">Request Energy</Link>
       <br />
-      <Link to="/transaction-pool">Sell Energy</Link>
+      <Link to="/sell-energy">Sell Energy</Link>
       <br />
       <Link to="/blockchain">Blockchain</Link>
       <br />
-      
     </div>
   );
 }

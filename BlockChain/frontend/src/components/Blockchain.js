@@ -31,7 +31,7 @@ function Blockchain() {
 
   return (
     <div className="Blockchain">
-      <Link to='/'>Home</Link>
+      <Link to='/dashboard'>Back To Dashboard</Link>
       <hr />
       <h3>Blockchain</h3>
       <div>

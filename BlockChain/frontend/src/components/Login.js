@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import logo from '../assets/logo.png';
+import final_logo from '../assets/final_logo.png';
 import { API_BASE_URL } from '../config';
 import history from '../history';
 import { FormGroup, FormControl, Button } from 'react-bootstrap';
@@ -36,8 +36,10 @@ function Login() {
 
   return (
     <div className="Login">
-      <img className="logo" src={logo} alt="application-logo" />
-      <h3>Enter Login Details</h3>
+    <br />
+      <img className="final_logo" src={final_logo} alt="application-logo" />
+      <div className= "bbox">
+      <h3><b>Enter Login Details</b></h3>
       <hr />
       <br />
       <FormGroup>
@@ -62,8 +64,9 @@ function Login() {
           variant="danger"
           onClick={submitCredentials}
         >
-          Submit
+         LOGIN
         </Button>
+      </div>
       </div>
       </div>
   )

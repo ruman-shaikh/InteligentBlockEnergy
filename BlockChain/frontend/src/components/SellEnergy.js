@@ -4,6 +4,7 @@ import { Button } from 'react-bootstrap';
 import Etran from './Etran';
 import { API_BASE_URL, SECONDS_JS } from '../config';
 import history from '../history';
+import { FormGroup, FormControl } from 'react-bootstrap';
 
 const POLL_INTERVAL = 10 * SECONDS_JS;
 function SellEnergy() {
@@ -29,7 +30,7 @@ function SellEnergy() {
     fetch(`${API_BASE_URL}/account/esell`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ quantity })
+      body: JSON.stringify({ etuid })
     }).then(response => response.json())
       .then(json => {
         console.log('submitEtuid json', json);
@@ -41,8 +42,8 @@ function SellEnergy() {
         else
         alert('Transaction Failed, ETUID not found');
       });
-
-useEffect(() => {
+    }
+   useEffect(() => {
     fetchEtrandata();
 
     const intervalId = setInterval(fetchEtrandata, POLL_INTERVAL);
@@ -52,9 +53,26 @@ useEffect(() => {
 
   return (
     <div className="SellEnergy">
-      <Link to="/">Home</Link>
       <hr />
-      <h3>Transaction Pool</h3>
+      <h3>Please copy paste an etuid from the available list below</h3>
+      <br/>
+      <FormGroup>
+        <FormControl
+          input="text"
+          placeholder="Enter Etuid"
+          value={etuid}
+          onChange={updateEtuid}
+        />
+      </FormGroup>
+      <div>
+        <Button
+          variant="danger"
+          onClick={submitEtuid}
+        >Sell
+        </Button>
+      </div>
+      <br />
+      <h3>Available Etuids</h3>
       <div>
         {
           etrandata.map(etran => (
@@ -66,14 +84,11 @@ useEffect(() => {
         }
       </div>
       <hr />
-      <Button
-        variant="danger"
-        onClick={fetchMineBlock}
-      >
-        Mine a block of these transactions
-      </Button>
+      <br/>
+      <br/>
+            <Link to="/dashboard">Back To Dashboard</Link>
     </div>
   )
 }
-export default SellEnergy;
 
+export default SellEnergy;

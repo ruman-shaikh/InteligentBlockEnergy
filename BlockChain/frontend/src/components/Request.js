@@ -31,7 +31,7 @@ function Request() {
 
   return (
     <div className="Request">
-      <h2>Request Energy</h2>
+      <h2><b>Request Energy</b></h2>
       <br/>  
       <hr />
       <br />

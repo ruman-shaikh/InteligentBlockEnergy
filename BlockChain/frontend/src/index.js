@@ -10,6 +10,7 @@ import TransactionPool from './components/TransactionPool';
 import Login from './components/Login';
 import Dashboard from './components/Dashboard';
 import Request from './components/Request';
+import SellEnergy from './components/SellEnergy';
 ReactDOM.render(
   <Router history={history}>
     <Switch>
@@ -20,6 +21,7 @@ ReactDOM.render(
       <Route path='/transaction-pool' component={TransactionPool} />
       <Route path='/dashboard' component={Dashboard} />
       <Route path='/request' component={Request} />
+      <Route path='/sell-energy' component={SellEnergy} />
     </Switch>
   </Router>,
   document.getElementById('root')
