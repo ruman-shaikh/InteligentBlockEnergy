@@ -35,7 +35,7 @@ def dataStreamGen(sky,time):
         print("Sunlight is unavailable during this time")
     else:
         print("Defined weather is invalid")
-    return val
+    return val*1000
 
 def dataStreamCon(temp,time):
     """
@@ -131,7 +131,7 @@ def dataStreamCon(temp,time):
         print(t)
         print(unit)
 
-    return unit
+    return unit*1000
             
     """
     Testing code for gridsim

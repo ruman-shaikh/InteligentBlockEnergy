@@ -16,10 +16,23 @@ function SellEnergy() {
       .then(response => response.json())
       .then(json => {
         console.log('Etran json', json);
-
-        setEtrandata(json);
+        if(json.status){
+          if (Array.isArray(json.etrandata)) console.log('results are array');
+          setEtrandata(json.etrandata);
+        }
+        else {
+          alert('List is empty');
+          window.location = '/dashboard';
+        }
       });
   }
+  useEffect(() => {
+    fetchEtrandata();
+
+    const intervalId = setInterval(fetchEtrandata, POLL_INTERVAL);
+
+    return () => clearInterval(intervalId);
+  }, []);
 
 
   const updateEtuid = event => {
@@ -43,13 +56,7 @@ function SellEnergy() {
         alert('Transaction Failed, ETUID not found');
       });
     }
-   useEffect(() => {
-    fetchEtrandata();
-
-    const intervalId = setInterval(fetchEtrandata, POLL_INTERVAL);
-
-    return () => clearInterval(intervalId);
-  }, []);
+   
 
   return (
     <div className="SellEnergy">

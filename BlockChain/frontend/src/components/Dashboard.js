@@ -12,7 +12,7 @@ function Dashboard() {
       .then(json => setAccountInfo(json));
   }, []);
 
-  const { name, userid, address, meterid, storage } = accountInfo;
+  const { name, userid, address, meterid, storage, balance } = accountInfo;
 
   return (
     <div className="Dashboard">
@@ -26,6 +26,7 @@ function Dashboard() {
         <div>Address: {address}</div>
         <div>Meterid: {meterid}</div>
         <div>Storage: {storage}</div>
+        <div>Balance: {balance}</div>
       </div>
       <br />
       <br />

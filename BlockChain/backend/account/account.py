@@ -32,6 +32,7 @@ class Account:
             return False
 
     def requestEnergy(self, energyQuantity):
+        energyQuantity = int(energyQuantity)
         if self.wallet.balance < energyQuantity:
             return False
         return Etran(self.userID, energyQuantity)

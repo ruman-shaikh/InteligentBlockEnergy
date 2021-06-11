@@ -93,7 +93,8 @@ def route_account_info():
         'userid': account.userID,
         'address': account.address,
         'meterid': account.meter.id,
-        'storage': account.meter.storage
+        'storage': account.meter.storage,
+        'balance': account.wallet.balance
     }
     return jsonify(data)
 
@@ -153,7 +154,7 @@ def route_account_etran():
             data.append(i.to_json())
     if (len(data) == 0):
         return jsonify({'status': False})
-    return jsonify({'status': True, 'etran': data})
+    return jsonify({'status': True, 'etrandata': data})
 
 @app.route('/account/tranpool')
 def route_account_tranpool():
